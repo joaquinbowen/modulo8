@@ -1,5 +1,8 @@
 //docker compose -p dnm up
+
 require('dotenv').config();
+const tareaRoutes = require("./routes/tareaRoutes");
+
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,6 +17,8 @@ app.get('/', (req, res) => {
     res.send('Api Backend Funcionando')
 
 });
+
+app.use("/api", tareaRoutes);
 
 
 
