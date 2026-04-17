@@ -1,4 +1,7 @@
 const authServices = require("../services/authServices");
+const blacklistRepo = require("../repositories/tokenBlacklistRepository");
+const jwt = require("jsonwebtoken");
+
 
 async function registrarUsuario(req, res) {
     try {
@@ -19,8 +22,27 @@ async function loginUsuario(req, res) {
     }
 }
 
+async function logout(req, res) {
+
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).json({ message: "No se proporciono el token" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+        return res.status(401).json({ message: "No se proporciono el token" });
+    }
+
+    await blacklistRepo.agregarToken(token);
+    res.json({ message: "Usuario deslogueado correctamente"});
+
+    
+}
+
 module.exports = {
     loginUsuario,
-    registrarUsuario
+    registrarUsuario,
+    logout
 
 }
